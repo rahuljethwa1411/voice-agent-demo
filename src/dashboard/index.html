@@ -85,21 +85,12 @@
         </div>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Supabase configuration - Replace with your values
-        const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-        const SUPABASE_KEY = 'YOUR_SUPABASE_ANON_KEY';
-        const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        async function fetchInitialLeads() {
-            const { data: leads, error } = await supabase
-                .from('leads')
-                .select('*')
-                .order('created_at', { ascending: false });
-
-            if (error) console.error('Error fetching leads:', error);
-            else updateTable(leads);
+        // No Supabase SDK needed! Our Express backend handles the database.
+        async function fetchLeads() {
+            const res = await fetch('/api/leads');
+            const leads = await res.json();
+            updateTable(leads);
         }
 
         function updateTable(leads) {
@@ -129,17 +120,9 @@
             `).join('');
         }
 
-        // Subscribe to real-time updates
-        const leadsSubscription = supabase
-            .channel('public:leads')
-            .on('postgres_changes', { event: 'INSERT', schema: 'public', table: 'leads' }, (payload) => {
-                console.log('New lead received!', payload);
-                fetchInitialLeads(); // Refresh table on new insert
-            })
-            .subscribe();
-
-        // Initial load
-        fetchInitialLeads();
+        // Initial load + poll every 5 seconds for near-real-time updates
+        fetchLeads();
+        setInterval(fetchLeads, 5000);
     </script>
 </body>
 
