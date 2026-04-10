@@ -2,11 +2,11 @@
   "name": "coaching-receptionist-agent",
   "version": "1.0.0",
   "description": "Voice AI Receptionist for Coaching Institutes using LiveKit and Sarvam AI",
-  "main": "src/agent.ts",
+  "main": "src/agent/agent.ts",
   "scripts": {
-    "dev": "tsx src/agent.ts dev",
-    "dashboard": "tsx src/server.ts",
-    "voice": "tsx src/agent.ts dev",
+    "dev": "tsx src/agent/agent.ts dev",
+    "dashboard": "tsx src/dashboard/main.ts",
+    "voice": "tsx src/agent/agent.ts dev",
     "start": "npm run dashboard"
   },
   "dependencies": {
