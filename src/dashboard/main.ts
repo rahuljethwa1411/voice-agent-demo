@@ -135,7 +135,9 @@ app.post('/api/auth/signup', async (req: Request, res: Response) => {
     return res.status(400).json({ error: 'Invalid email format' });
   }
 
-  const { data, error } = await supabase.auth.signUp({
+  const authClient = createClient(process.env.SUPABASE_URL || '', process.env.SUPABASE_KEY || '', { auth: { persistSession: false, autoRefreshToken: false } });
+  
+  const { data, error } = await authClient.auth.signUp({
     email: email.trim().toLowerCase(),
     password,
     options: {
@@ -182,7 +184,9 @@ app.post('/api/auth/login', async (req: Request, res: Response) => {
     return res.status(400).json({ error: 'Invalid input types' });
   }
 
-  const { data, error } = await supabase.auth.signInWithPassword({
+  const authClient = createClient(process.env.SUPABASE_URL || '', process.env.SUPABASE_KEY || '', { auth: { persistSession: false, autoRefreshToken: false } });
+
+  const { data, error } = await authClient.auth.signInWithPassword({
     email: email.trim().toLowerCase(),
     password
   });
