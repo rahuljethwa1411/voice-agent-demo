@@ -4,126 +4,321 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Voice AI Leads Dashboard</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Leads | Voice AI Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+        :root {
+            --bg: #ffffff;
+            --bg-card: #ffffff;
+            --bg-muted: #f8f9fa;
+            --border: #e5e7eb;
+            --text: #09090b;
+            --text-muted: #71717a;
+            --text-subtle: #a1a1aa;
+            --accent: #18181b;
+            --ring: #e5e7eb;
+            --badge-hot-bg: #fef2f2; --badge-hot-text: #dc2626; --badge-hot-border: #fecaca;
+            --badge-warm-bg: #fffbeb; --badge-warm-text: #d97706; --badge-warm-border: #fde68a;
+            --badge-cold-bg: #eff6ff; --badge-cold-text: #2563eb; --badge-cold-border: #bfdbfe;
+            --badge-new-bg: #f4f4f5; --badge-new-text: #71717a; --badge-new-border: #e4e4e7;
+        }
+
+        .dark {
+            --bg: #09090b;
+            --bg-card: #0a0a0c;
+            --bg-muted: #18181b;
+            --border: #27272a;
+            --text: #fafafa;
+            --text-muted: #a1a1aa;
+            --text-subtle: #52525b;
+            --accent: #fafafa;
+            --ring: #3f3f46;
+            --badge-hot-bg: #1c1012; --badge-hot-text: #ef4444; --badge-hot-border: #3b1419;
+            --badge-warm-bg: #1a1608; --badge-warm-text: #eab308; --badge-warm-border: #3d3408;
+            --badge-cold-bg: #0c1425; --badge-cold-text: #3b82f6; --badge-cold-border: #1e3a5f;
+            --badge-new-bg: #18181b; --badge-new-text: #71717a; --badge-new-border: #27272a;
+        }
+
         body {
-            font-family: 'Outfit', sans-serif;
-            background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 100%);
-            color: white;
+            font-family: 'Inter', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text);
             min-height: 100vh;
+            transition: background 0.2s, color 0.2s;
+            font-size: 14px;
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.03);
-            backdrop-filter: blur(10px);
-            border: 1px rgba(255, 255, 255, 0.1) solid;
-            border-radius: 1.5rem;
-        }
+        /* Layout */
+        .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
 
-        .pulse-dot {
-            width: 10px;
-            height: 10px;
-            background: #10b981;
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 10px #10b981;
-            animation: pulse 2s infinite;
+        /* Navbar */
+        .navbar {
+            border-bottom: 1px solid var(--border);
+            padding: 12px 0;
+            position: sticky; top: 0; z-index: 50;
+            background: var(--bg);
+            backdrop-filter: blur(8px);
         }
+        .navbar .inner { display: flex; justify-content: space-between; align-items: center; }
+        .nav-left { display: flex; align-items: center; gap: 10px; }
+        .nav-left h1 { font-size: 14px; font-weight: 600; }
+        .nav-left .dot { height: 6px; width: 6px; border-radius: 50%; background: #22c55e; display: inline-block; }
+        .nav-right { display: flex; align-items: center; gap: 8px; }
 
-        @keyframes pulse {
-            0% {
-                transform: scale(0.95);
-                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7);
+        /* Buttons */
+        .btn {
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 500;
+            border: 1px solid var(--border); background: var(--bg);
+            color: var(--text); cursor: pointer; transition: all 0.15s;
+        }
+        .btn:hover { background: var(--bg-muted); }
+        .btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
+        .btn-primary:hover { opacity: 0.9; }
+        .btn-icon { padding: 6px 8px; }
+
+        /* Stats */
+        .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin: 24px 0; }
+        @media (max-width: 640px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+        .stat-card {
+            padding: 16px; border-radius: 8px;
+            border: 1px solid var(--border); background: var(--bg-card);
+        }
+        .stat-label { font-size: 11px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
+        .stat-value { font-size: 28px; font-weight: 700; line-height: 1; }
+        .stat-value.hot { color: #dc2626; }
+        .stat-value.warm { color: #d97706; }
+        .stat-value.cold { color: #2563eb; }
+
+        /* Table */
+        .table-wrap {
+            border: 1px solid var(--border); border-radius: 8px;
+            overflow: hidden; background: var(--bg-card);
+        }
+        .table-scroll { overflow-x: auto; }
+        table { width: 100%; border-collapse: collapse; min-width: 600px; }
+        thead { background: var(--bg-muted); }
+        th {
+            padding: 10px 16px; font-size: 11px; font-weight: 600;
+            color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;
+            text-align: left; border-bottom: 1px solid var(--border);
+        }
+        td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover { background: var(--bg-muted); }
+        .td-name { font-weight: 600; color: var(--text); }
+        .td-course {
+            display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;
+            background: var(--bg-muted); color: var(--text-muted); border: 1px solid var(--border);
+        }
+        .td-notes { font-size: 13px; color: var(--text-muted); max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .td-time { font-size: 12px; color: var(--text-subtle); text-align: right; white-space: nowrap; }
+
+        /* Badges */
+        .badge {
+            display: inline-flex; align-items: center; gap: 5px;
+            padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600;
+            border: 1px solid;
+        }
+        .badge-hot { background: var(--badge-hot-bg); color: var(--badge-hot-text); border-color: var(--badge-hot-border); }
+        .badge-warm { background: var(--badge-warm-bg); color: var(--badge-warm-text); border-color: var(--badge-warm-border); }
+        .badge-cold { background: var(--badge-cold-bg); color: var(--badge-cold-text); border-color: var(--badge-cold-border); }
+        .badge-new { background: var(--badge-new-bg); color: var(--badge-new-text); border-color: var(--badge-new-border); }
+        .badge-dot { height: 6px; width: 6px; border-radius: 50%; }
+        .badge-hot .badge-dot { background: #dc2626; }
+        .badge-warm .badge-dot { background: #d97706; }
+        .badge-cold .badge-dot { background: #2563eb; }
+        .badge-new .badge-dot { background: #71717a; }
+
+        /* Empty */
+        .empty { padding: 60px 16px; text-align: center; }
+        .empty p { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+
+        /* Mobile cards (below 640px, hide table and show cards) */
+        .mobile-cards { display: none; }
+        @media (max-width: 640px) {
+            .table-scroll { display: none; }
+            .mobile-cards { display: block; }
+            .mobile-card {
+                padding: 14px 16px; border-bottom: 1px solid var(--border);
             }
-
-            70% {
-                transform: scale(1);
-                box-shadow: 0 0 0 10px rgba(16, 185, 129, 0);
-            }
-
-            100% {
-                transform: scale(0.95);
-                box-shadow: 0 0 0 0 rgba(16, 185, 129, 0);
-            }
+            .mobile-card:last-child { border-bottom: none; }
+            .mc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
+            .mc-name { font-weight: 600; font-size: 15px; }
+            .mc-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
+            .mc-notes { font-size: 12px; color: var(--text-muted); }
+            .mc-time { font-size: 11px; color: var(--text-subtle); margin-top: 6px; }
         }
+
+        /* Theme toggle icon */
+        .theme-icon { width: 16px; height: 16px; }
     </style>
 </head>
 
-<body class="p-8">
-    <div class="max-w-6xl mx-auto">
-        <!-- Header -->
-        <div class="flex justify-between items-center mb-12">
-            <div>
-                <h1 class="text-4xl font-bold mb-2 tracking-tight">Voice AI Leads</h1>
-                <p class="text-slate-400 flex items-center">
-                    <span class="pulse-dot mr-2"></span> System Live: Capturing Student Data
-                </p>
+<body>
+    <nav class="navbar">
+        <div class="container inner">
+            <div class="nav-left">
+                <span class="dot"></span>
+                <h1>XYZ Coaching · Voice AI</h1>
             </div>
-            <div class="text-right">
-                <div class="text-xs text-slate-500 uppercase tracking-widest mb-1">Total Leads</div>
-                <div id="lead-count" class="text-5xl font-bold text-indigo-400">0</div>
+            <div class="nav-right">
+                <span id="update-time" style="font-size:11px;color:var(--text-subtle)"></span>
+                <button class="btn" onclick="exportCSV()">Export</button>
+                <button class="btn btn-icon" onclick="toggleTheme()" title="Toggle theme" id="theme-btn">
+                    <svg class="theme-icon" id="icon-sun" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
+                    <svg class="theme-icon" id="icon-moon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container">
+        <!-- Stats -->
+        <div class="stats">
+            <div class="stat-card">
+                <div class="stat-label">Total Leads</div>
+                <div class="stat-value" id="s-total">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Hot 🔥</div>
+                <div class="stat-value hot" id="s-hot">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Warm</div>
+                <div class="stat-value warm" id="s-warm">0</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Cold</div>
+                <div class="stat-value cold" id="s-cold">0</div>
             </div>
         </div>
 
-        <!-- Table Container -->
-        <div class="glass-card overflow-hidden">
-            <table class="w-full text-left">
-                <thead class="bg-white/5 border-b border-white/10">
-                    <tr>
-                        <th class="px-8 py-4 text-slate-400 font-medium">Student Name</th>
-                        <th class="px-8 py-4 text-slate-400 font-medium">Interested Course</th>
-                        <th class="px-8 py-4 text-slate-400 font-medium">Call Time</th>
-                        <th class="px-8 py-4 text-slate-400 font-medium">Status</th>
-                    </tr>
-                </thead>
-                <tbody id="leads-body">
-                    <!-- Leads will appear here -->
-                </tbody>
-            </table>
+        <!-- Table -->
+        <div class="table-wrap" id="table-wrap">
+            <div class="table-scroll">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Status</th>
+                            <th>Name</th>
+                            <th>Course</th>
+                            <th>AI Summary</th>
+                            <th style="text-align:right">Time</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tbody"></tbody>
+                </table>
+            </div>
+
+            <!-- Mobile Cards -->
+            <div class="mobile-cards" id="mobile-cards"></div>
+
+            <!-- Empty state -->
+            <div id="empty" class="empty" style="display:none;">
+                <p style="font-weight:600;color:var(--text)">No leads yet</p>
+                <p>Leads from AI calls will appear here in real time.</p>
+            </div>
         </div>
     </div>
 
     <script>
-        // No Supabase SDK needed! Our Express backend handles the database.
+        let leads = [];
+        const isDark = () => document.documentElement.classList.contains('dark');
+
+        function toggleTheme() {
+            document.documentElement.classList.toggle('dark');
+            document.getElementById('icon-sun').style.display = isDark() ? 'none' : 'block';
+            document.getElementById('icon-moon').style.display = isDark() ? 'block' : 'none';
+            localStorage.setItem('theme', isDark() ? 'dark' : 'light');
+        }
+
+        // Load saved theme
+        if (localStorage.getItem('theme') === 'dark' || (!localStorage.getItem('theme') && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+            document.getElementById('icon-sun').style.display = 'none';
+            document.getElementById('icon-moon').style.display = 'block';
+        }
+
+        function badge(status) {
+            const map = { hot: 'Hot', warm: 'Warm', cold: 'Cold', new: 'New' };
+            const cls = `badge badge-${status || 'new'}`;
+            return `<span class="${cls}"><span class="badge-dot"></span>${map[status] || 'New'}</span>`;
+        }
+
+        function timeAgo(dateStr) {
+            const d = new Date(dateStr);
+            return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' · ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        }
+
         async function fetchLeads() {
-            const res = await fetch('/api/leads');
-            const leads = await res.json();
-            updateTable(leads);
+            try {
+                const res = await fetch('/api/leads');
+                leads = await res.json();
+                render();
+                document.getElementById('update-time').textContent = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+            } catch(e) { console.error(e); }
         }
 
-        function updateTable(leads) {
-            const body = document.getElementById('leads-body');
-            const count = document.getElementById('lead-count');
+        function render() {
+            // Stats
+            document.getElementById('s-total').textContent = leads.length;
+            document.getElementById('s-hot').textContent = leads.filter(l => l.status === 'hot').length;
+            document.getElementById('s-warm').textContent = leads.filter(l => l.status === 'warm').length;
+            document.getElementById('s-cold').textContent = leads.filter(l => l.status === 'cold' || l.status === 'new').length;
 
-            count.innerText = leads.length;
+            if (leads.length === 0) {
+                document.getElementById('empty').style.display = 'block';
+                document.getElementById('tbody').innerHTML = '';
+                document.getElementById('mobile-cards').innerHTML = '';
+                return;
+            }
+            document.getElementById('empty').style.display = 'none';
 
-            body.innerHTML = leads.map(lead => `
-                <tr class="border-b border-white/5 hover:bg-white/5 transition-colors">
-                    <td class="px-8 py-6 font-semibold text-lg">${lead.name || 'Unknown'}</td>
-                    <td class="px-8 py-6">
-                        <span class="px-3 py-1 rounded-full bg-indigo-500/20 text-indigo-300 text-sm border border-indigo-500/30">
-                            ${lead.course || 'N/A'}
-                        </span>
-                    </td>
-                    <td class="px-8 py-6 text-slate-400">${new Date(lead.created_at).toLocaleString()}</td>
-                    <td class="px-8 py-6">
-                        <span class="text-emerald-400 flex items-center">
-                            <svg class="w-4 h-4 mr-1" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"></path>
-                            </svg>
-                            ${lead.status || 'Interested'}
-                        </span>
-                    </td>
-                </tr>
-            `).join('');
+            // Desktop table
+            document.getElementById('tbody').innerHTML = leads.map(l => `
+                <tr>
+                    <td>${badge(l.status)}</td>
+                    <td class="td-name">${l.name || 'Anonymous'}</td>
+                    <td><span class="td-course">${l.course || '—'}</span></td>
+                    <td class="td-notes" title="${l.notes || ''}">${l.notes || '—'}</td>
+                    <td class="td-time">${timeAgo(l.created_at)}</td>
+                </tr>`).join('');
+
+            // Mobile cards
+            document.getElementById('mobile-cards').innerHTML = leads.map(l => `
+                <div class="mobile-card">
+                    <div class="mc-top">
+                        <span class="mc-name">${l.name || 'Anonymous'}</span>
+                        ${badge(l.status)}
+                    </div>
+                    <div class="mc-meta">
+                        <span class="td-course">${l.course || '—'}</span>
+                    </div>
+                    ${l.notes ? `<div class="mc-notes">${l.notes}</div>` : ''}
+                    <div class="mc-time">${timeAgo(l.created_at)}</div>
+                </div>`).join('');
         }
 
-        // Initial load + poll every 5 seconds for near-real-time updates
+        function exportCSV() {
+            if (!leads.length) return alert('No leads.');
+            const esc = (v) => `"${String(v || '').replace(/"/g, '""')}"`;
+            const headers = ['Name','Course','Status','Notes','Date'];
+            const rows = leads.map(l => [
+                esc(l.name), esc(l.course), esc(l.status),
+                esc(l.notes), esc(new Date(l.created_at).toLocaleString())
+            ].join(','));
+            const csv = '\uFEFF' + [headers.join(','), ...rows].join('\r\n');
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
+            a.download = `leads_${new Date().toISOString().slice(0,10)}.csv`;
+            a.click();
+        }
+
         fetchLeads();
         setInterval(fetchLeads, 5000);
     </script>
 </body>
-
 </html>
