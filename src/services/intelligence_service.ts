@@ -160,8 +160,17 @@ export function getTools(supabase: SupabaseClient) {
       }
       console.log(`[TOOL] 💾 Saving lead: ${name} | ${course} | ${interest_level} | ${notes}`);
       try {
+        // Hardcoding the Admin's User ID (Client #1) so the leads show up on their dashboard
+        const DEFAULT_OWNER_ID = '79ec46f9-611f-457e-b88c-149226960520';
+
         const { error } = await supabase.from('leads').insert([
-          { name: name.trim(), course, status: interest_level, notes }
+          { 
+            name: name.trim(), 
+            course, 
+            status: interest_level, 
+            notes,
+            owner_id: DEFAULT_OWNER_ID 
+          }
         ]);
         if (error) {
           console.error('[TOOL] Supabase insert error:', error.message);
