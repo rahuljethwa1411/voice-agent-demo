@@ -206,6 +206,7 @@
                         <tr>
                             <th>Status</th>
                             <th>Name</th>
+                            <th>Phone</th>
                             <th>Course</th>
                             <th>AI Summary</th>
                             <th style="text-align:right">Time</th>
@@ -314,6 +315,7 @@
                 <tr>
                     <td>${badge(l.status)}</td>
                     <td class="td-name">${l.name || 'Anonymous'}</td>
+                    <td class="td-phone">${l.phone_number || '—'}</td>
                     <td><span class="td-course">${l.course || '—'}</span></td>
                     <td class="td-notes" title="${l.notes || ''}">${l.notes || '—'}</td>
                     <td class="td-time">${timeAgo(l.created_at)}</td>
@@ -327,6 +329,7 @@
                         ${badge(l.status)}
                     </div>
                     <div class="mc-meta">
+                        <span class="mc-phone">${l.phone_number || 'No Number'}</span>
                         <span class="td-course">${l.course || '—'}</span>
                     </div>
                     ${l.notes ? `<div class="mc-notes">${l.notes}</div>` : ''}
@@ -337,9 +340,9 @@
         function exportCSV() {
             if (!leads.length) return alert('No leads.');
             const esc = (v) => `"${String(v || '').replace(/"/g, '""')}"`;
-            const headers = ['Name','Course','Status','Notes','Date'];
+            const headers = ['Name','Phone','Course','Status','Notes','Date'];
             const rows = leads.map(l => [
-                esc(l.name), esc(l.course), esc(l.status),
+                esc(l.name), esc(l.phone_number), esc(l.course), esc(l.status),
                 esc(l.notes), esc(new Date(l.created_at).toLocaleString())
             ].join(','));
             const csv = '\uFEFF' + [headers.join(','), ...rows].join('\r\n');

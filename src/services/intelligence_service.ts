@@ -12,7 +12,7 @@ export function getLLM() {
 // system_prompt is now fetched from Supabase directly in agent.ts
 
 
-export function getTools(supabase: SupabaseClient, ownerId: string) {
+export function getTools(supabase: SupabaseClient, ownerId: string, callerId?: string) {
   const save_lead = llm.tool({
     description: 'Save a student lead to the database. Call this IMMEDIATELY when you have their name and course. Do not delay.',
     parameters: z.object({
@@ -27,15 +27,58 @@ export function getTools(supabase: SupabaseClient, ownerId: string) {
         console.log(`[TOOL] ⚠️ Rejected save_lead — name is empty. Ask for name first.`);
         return "You don't have the student's name yet. Ask for their name before saving.";
       }
-      console.log(`[TOOL] 💾 Saving lead: ${name} | ${course} | ${interest_level} | ${notes}`);
+      console.log(`[TOOL] 💾 Saving lead: ${name} | ${course} | ${interest_level} | ${notes} | Phone: ${callerId || 'Unknown'}`);
       try {
+        // DEDUP STRATEGY:
+        // - If we have a real phone number: dedup by phone (unique per caller, even if names match)
+        // - If anonymous (web test): dedup by name within a 30-min window (same session)
+        let query = supabase
+          .from('leads')
+          .select('id')
+          .eq('owner_id', ownerId);
+
+        const hasRealPhone = callerId && callerId !== 'Anonymous' && callerId !== 'Unknown';
+
+        if (hasRealPhone) {
+          // Two different people (Rohan Sharma & Rohan Kumar) have different phone numbers → no collision
+          query = query.eq('phone_number', callerId);
+        } else {
+          // Fallback for web testing: dedup by name within the current session (30 min)
+          const thirtyMinAgo = new Date(Date.now() - 30 * 60 * 1000).toISOString();
+          query = query.ilike('name', name.trim()).gte('created_at', thirtyMinAgo);
+        }
+
+        const { data: existing } = await query.limit(1);
+
+        if (existing && existing.length > 0) {
+          // UPDATE the existing lead instead of creating a duplicate
+          const { error: updateErr } = await supabase
+            .from('leads')
+            .update({
+              name: name.trim(),
+              course: course || 'General Inquiry',
+              status: interest_level || 'warm',
+              notes: notes || 'No additional notes',
+              phone_number: callerId || null,
+            })
+            .eq('id', existing[0].id);
+
+          if (updateErr) {
+            console.error('[TOOL] Supabase update error:', updateErr.message);
+            return "Failed to update lead. Continue the conversation normally.";
+          }
+          console.log(`[TOOL] 🔄 Lead updated (dedup): ${name} (${interest_level})`);
+          return `Lead saved successfully. The student's demo seat is reserved. Acknowledge warmly by name and confirm the demo schedule for their course.`;
+        }
+
         const { error } = await supabase.from('leads').insert([
-          { 
-            name: name.trim(), 
-            course: course || 'General Inquiry', 
-            status: interest_level || 'warm', 
+          {
+            name: name.trim(),
+            course: course || 'General Inquiry',
+            status: interest_level || 'warm',
             notes: notes || 'No additional notes',
-            owner_id: ownerId 
+            owner_id: ownerId,
+            phone_number: callerId || null
           }
         ]);
         if (error) {

@@ -13,7 +13,7 @@ import { fileURLToPath } from 'node:url';
 import { createClient } from '@supabase/supabase-js';
 
 // --- Services ---
-import { getLLM, getInstructions, getTools } from '../services/intelligence_service.js';
+import { getLLM, getTools } from '../services/intelligence_service.js';
 import { getSTT, getTTS } from '../services/sarvam_service.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -53,11 +53,18 @@ export default defineAgent({
 
       const vad = await silero.VAD.load();
       
-      // Get the dialed number (hardcoded fallback for web testing until SIP is connected)
-      // In production, this will use ctx.participant.metadata['sip.to']
-      const dialedNumber = '+919999999999';
+      // Get the dialed number (The Twilio coaching number the student called)
+      const dialedNumber = ctx.job.participant?.attributes?.['sip.to'] || '+919999999999';
       
-      console.log(`[ROUTING] Looking up client for number: ${dialedNumber}`);
+      // Get the student's phone number (The caller's real phone number)
+      let callerId = ctx.job.participant?.attributes?.['sip.from'] || ctx.job.participant?.identity || 'Anonymous';
+      
+      // If we are testing from the web playground, give them a realistic mock number for the dashboard
+      if (callerId === 'Anonymous' || callerId.startsWith('identity_') || callerId.startsWith('guest')) {
+        callerId = '+919876500000'; // Mock Test Number
+      }
+      
+      console.log(`[ROUTING] Incoming call from: ${callerId} | Dialed: ${dialedNumber}`);
       const { data: client, error: dbError } = await supabase
         .from('clients')
         .select('system_prompt, owner_id, company_name')
@@ -76,24 +83,27 @@ export default defineAgent({
           Be extremely polite. Apologize for the inconvenience. 
           Ask for the caller's name and message, and tell them an agent will call them back.
         `;
-        tools = getTools(supabase, '79ec46f9-611f-457e-b88c-149226960520'); // Use admin ID for fallback
+        tools = getTools(supabase, '79ec46f9-611f-457e-b88c-149226960520', callerId); // Use admin ID for fallback
         greeting = "Hello! I am sorry, but we are experiencing a temporary technical issue. How can I help you by taking a message?";
       } else {
         console.log(`✅ Loaded brain for: ${client.company_name}`);
         instructions = client.system_prompt;
-        tools = getTools(supabase, client.owner_id);
+        tools = getTools(supabase, client.owner_id, callerId);
         greeting = `Namaste! ${client.company_name} mein aapka swagat hai. Main aapki kya sahayata kar sakti hoon?`;
       }
       const chatContext = new llm.ChatContext();
 
+      const llmInstance = getLLM();
+      llmInstance.on?.('error', (err: any) => console.error('[LLM ERROR]', err));
+
       const session = new voice.AgentSession({
-        llm: getLLM(),
+        llm: llmInstance,
         stt: getSTT(),
         tts: getTTS(),
         vad,
         turnHandling: {
           turnDetection: 'vad',
-          endpointing: { minDelay: 250 },
+          endpointing: { minDelay: 2000 },
         },
       });
 
@@ -139,4 +149,10 @@ export default defineAgent({
   },
 });
 
-cli.runApp(new WorkerOptions({ agent: __filename }));
+cli.runApp(
+  new WorkerOptions({
+    agent: __filename,
+    workerType: 'per-job', // Ensures each call runs in a clean environment
+    concurrency: 10,        // Allows 10 students to talk at once on one server
+  }),
+);
