@@ -9,326 +9,333 @@
     <style>
         *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
+        /* Professional, Enterprise SaaS Aesthetics (Vercel/Stripe inspired) */
         :root {
-            --bg: #ffffff;
+            /* Light theme */
+            --bg-base: #fafafa;
             --bg-card: #ffffff;
-            --bg-muted: #f8f9fa;
-            --border: #e5e7eb;
-            --text: #09090b;
-            --text-muted: #71717a;
+            --bg-hover: #f4f4f5;
+            --border: #e4e4e7;
+            --text-main: #09090b;
+            --text-muted: #52525b;
             --text-subtle: #a1a1aa;
-            --accent: #18181b;
-            --ring: #e5e7eb;
-            --badge-hot-bg: #fef2f2; --badge-hot-text: #dc2626; --badge-hot-border: #fecaca;
-            --badge-warm-bg: #fffbeb; --badge-warm-text: #d97706; --badge-warm-border: #fde68a;
-            --badge-cold-bg: #eff6ff; --badge-cold-text: #2563eb; --badge-cold-border: #bfdbfe;
-            --badge-new-bg: #f4f4f5; --badge-new-text: #71717a; --badge-new-border: #e4e4e7;
-            --chart-primary: #18181b;
-            --chart-secondary: #3b82f6;
-            --chart-accent: #8b5cf6;
-            --chart-warn: #f59e0b;
-            --chart-danger: #ef4444;
-            --chart-success: #22c55e;
-            --chart-grid: #e5e7eb;
-            --chart-bar: #18181b;
-            --chart-bar-hover: #3b82f6;
+            --accent: #000000;
+            --accent-hover: #27272a;
+            --primary: #2563eb;
+            
+            --hot-light: #fee2e2; --hot-text: #dc2626; --hot-border: #fca5a5;
+            --warm-light: #fef3c7; --warm-text: #d97706; --warm-border: #fcd34d;
+            --cold-light: #e0f2fe; --cold-text: #0284c7; --cold-border: #7dd3fc;
+            --new-light: #f4f4f5; --new-text: #52525b; --new-border: #e4e4e7;
+            
+            --success: #16a34a;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            --shadow-card: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
         }
 
         .dark {
-            --bg: #09090b;
-            --bg-card: #0a0a0c;
-            --bg-muted: #18181b;
+            /* Dark theme */
+            --bg-base: #09090b;
+            --bg-card: #18181b;
+            --bg-hover: #27272a;
             --border: #27272a;
-            --text: #fafafa;
+            --text-main: #fafafa;
             --text-muted: #a1a1aa;
             --text-subtle: #52525b;
-            --accent: #fafafa;
-            --ring: #3f3f46;
-            --badge-hot-bg: #1c1012; --badge-hot-text: #ef4444; --badge-hot-border: #3b1419;
-            --badge-warm-bg: #1a1608; --badge-warm-text: #eab308; --badge-warm-border: #3d3408;
-            --badge-cold-bg: #0c1425; --badge-cold-text: #3b82f6; --badge-cold-border: #1e3a5f;
-            --badge-new-bg: #18181b; --badge-new-text: #71717a; --badge-new-border: #27272a;
-            --chart-primary: #fafafa;
-            --chart-grid: #27272a;
-            --chart-bar: #fafafa;
-            --chart-bar-hover: #60a5fa;
+            --accent: #ffffff;
+            --accent-hover: #e4e4e7;
+            --primary: #3b82f6;
+            
+            --hot-light: rgba(220, 38, 38, 0.15); --hot-text: #f87171; --hot-border: rgba(220, 38, 38, 0.3);
+            --warm-light: rgba(217, 119, 6, 0.15); --warm-text: #fbbf24; --warm-border: rgba(217, 119, 6, 0.3);
+            --cold-light: rgba(2, 132, 199, 0.15); --cold-text: #38bdf8; --cold-border: rgba(2, 132, 199, 0.3);
+            --new-light: rgba(82, 82, 91, 0.2); --new-text: #a1a1aa; --new-border: rgba(82, 82, 91, 0.4);
+
+            --success: #22c55e;
+            
+            --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.5);
+            --shadow-card: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -2px rgba(0, 0, 0, 0.3);
         }
 
         body {
-            font-family: 'Inter', -apple-system, sans-serif;
-            background: var(--bg);
-            color: var(--text);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
             min-height: 100vh;
-            transition: background 0.2s, color 0.2s;
             font-size: 14px;
+            -webkit-font-smoothing: antialiased;
+            overflow-y: scroll;
         }
 
-        /* Layout */
-        .container { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+        .container { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
 
         /* Navbar */
         .navbar {
+            background-color: var(--bg-card);
             border-bottom: 1px solid var(--border);
-            padding: 12px 0;
             position: sticky; top: 0; z-index: 50;
-            background: var(--bg);
-            backdrop-filter: blur(8px);
         }
-        .navbar .inner { display: flex; justify-content: space-between; align-items: center; }
-        .nav-left { display: flex; align-items: center; gap: 10px; }
-        .nav-left h1 { font-size: 14px; font-weight: 600; }
-        .nav-left .dot { height: 6px; width: 6px; border-radius: 50%; background: #22c55e; display: inline-block; }
-        .nav-right { display: flex; align-items: center; gap: 8px; }
+        .navbar .inner { display: flex; justify-content: space-between; align-items: center; height: 64px; }
+        .nav-left { display: flex; align-items: center; gap: 12px; }
+        
+        .app-logo {
+            width: 28px; height: 28px; border-radius: 6px;
+            background-color: var(--accent); color: var(--bg-base);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 700; font-size: 14px;
+        }
+        
+        .nav-left h1 { font-size: 15px; font-weight: 600; letter-spacing: -0.01em; }
+        .nav-right { display: flex; align-items: center; gap: 12px; }
 
-        /* Buttons */
+        /* Professional Buttons */
         .btn {
-            display: inline-flex; align-items: center; gap: 6px;
-            padding: 6px 12px; border-radius: 6px; font-size: 13px; font-weight: 500;
-            border: 1px solid var(--border); background: var(--bg);
-            color: var(--text); cursor: pointer; transition: all 0.15s;
+            display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+            height: 36px; padding: 0 16px; border-radius: 6px; font-size: 14px; font-weight: 500;
+            border: 1px solid var(--border); background-color: var(--bg-card);
+            color: var(--text-main); cursor: pointer; transition: background-color 0.15s, border-color 0.15s;
+            box-shadow: var(--shadow-sm);
         }
-        .btn:hover { background: var(--bg-muted); }
-        .btn-primary { background: var(--accent); color: var(--bg); border-color: var(--accent); }
-        .btn-primary:hover { opacity: 0.9; }
-        .btn-icon { padding: 6px 8px; }
+        .btn:hover { background-color: var(--bg-hover); }
+        .btn:active { background-color: var(--border); }
+        .btn-icon { padding: 0; width: 36px; }
+        .btn-primary { background-color: var(--accent); color: var(--bg-base); border-color: var(--accent); }
+        .btn-primary:hover { background-color: var(--accent-hover); border-color: var(--accent-hover); }
 
-        /* Tabs */
+        /* Clean Segmented Tabs */
+        .tabs-container { margin: 32px 0; }
         .tabs {
-            display: flex; gap: 2px; margin: 20px 0 0;
-            border-bottom: 1px solid var(--border); padding-bottom: 0;
+            display: inline-flex; background-color: var(--bg-hover);
+            padding: 4px; border-radius: 8px; border: 1px solid var(--border);
         }
         .tab {
-            padding: 8px 16px; font-size: 13px; font-weight: 500;
-            color: var(--text-muted); cursor: pointer; border: none; background: none;
-            border-bottom: 2px solid transparent; transition: all 0.15s;
-            margin-bottom: -1px;
+            padding: 6px 16px; font-size: 14px; font-weight: 500;
+            color: var(--text-muted); cursor: pointer; border: none; background: transparent;
+            border-radius: 6px; transition: all 0.15s;
         }
-        .tab:hover { color: var(--text); }
-        .tab.active { color: var(--text); border-bottom-color: var(--accent); font-weight: 600; }
+        .tab:hover { color: var(--text-main); }
+        .tab.active { background-color: var(--bg-card); color: var(--text-main); box-shadow: var(--shadow-sm); }
 
-        /* Stats */
-        .stats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 12px; margin: 20px 0; }
-        @media (max-width: 768px) { .stats { grid-template-columns: repeat(3, 1fr); } }
-        @media (max-width: 480px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+        /* Stats Grid */
+        .stats { display: grid; grid-template-columns: repeat(6, 1fr); gap: 16px; margin-bottom: 32px; }
+        @media (max-width: 1024px) { .stats { grid-template-columns: repeat(3, 1fr); } }
+        @media (max-width: 640px) { .stats { grid-template-columns: repeat(2, 1fr); } }
+        
         .stat-card {
-            padding: 16px; border-radius: 8px;
-            border: 1px solid var(--border); background: var(--bg-card);
+            padding: 20px; border-radius: 12px; background-color: var(--bg-card);
+            border: 1px solid var(--border); box-shadow: var(--shadow-sm);
         }
-        .stat-label { font-size: 11px; color: var(--text-muted); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4px; }
-        .stat-value { font-size: 28px; font-weight: 700; line-height: 1; }
-        .stat-value.hot { color: #dc2626; }
-        .stat-value.warm { color: #d97706; }
-        .stat-value.cold { color: #2563eb; }
-        .stat-sub { font-size: 11px; color: var(--text-subtle); margin-top: 4px; }
+        .stat-label { font-size: 13px; color: var(--text-muted); font-weight: 500; margin-bottom: 8px; }
+        .stat-value { font-size: 28px; font-weight: 700; color: var(--text-main); letter-spacing: -0.02em; }
+        .stat-value.hot { color: var(--hot-text); }
+        .stat-value.warm { color: var(--warm-text); }
+        .stat-value.cold { color: var(--cold-text); }
+        .stat-value.success { color: var(--success); }
+        .stat-sub { font-size: 13px; color: var(--text-subtle); margin-top: 8px; }
 
         /* Charts Grid */
-        .charts-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 20px 0;
-        }
+        .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px; }
         @media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } }
+        
         .chart-card {
-            border: 1px solid var(--border); border-radius: 8px;
-            background: var(--bg-card); padding: 20px; min-height: 280px;
+            border-radius: 12px; background-color: var(--bg-card);
+            border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+            padding: 24px; min-height: 340px; display: flex; flex-direction: column;
         }
         .chart-card.full-width { grid-column: 1 / -1; }
-        .chart-title {
-            font-size: 13px; font-weight: 600; margin-bottom: 4px;
-        }
-        .chart-subtitle {
-            font-size: 11px; color: var(--text-muted); margin-bottom: 16px;
-        }
-        .chart-canvas-wrap {
-            position: relative; width: 100%; height: 200px;
-        }
-        .chart-canvas-wrap canvas {
-            width: 100% !important; height: 100% !important;
-        }
+        .chart-title { font-size: 16px; font-weight: 600; color: var(--text-main); margin-bottom: 4px; }
+        .chart-subtitle { font-size: 14px; color: var(--text-muted); margin-bottom: 24px; }
 
-        /* Funnel */
-        .funnel { display: flex; flex-direction: column; gap: 10px; margin-top: 8px; }
-        .funnel-step {
-            display: flex; align-items: center; gap: 12px;
-        }
-        .funnel-bar-wrap {
-            flex: 1; height: 32px; background: var(--bg-muted); border-radius: 6px; overflow: hidden; position: relative;
-        }
+        /* Funnel (Clean, strict blocks) */
+        .funnel { display: flex; flex-direction: column; gap: 16px; flex-grow: 1; justify-content: center; }
+        .funnel-step { display: flex; align-items: center; gap: 16px; }
+        .funnel-bar-wrap { flex: 1; height: 36px; background-color: var(--bg-hover); border-radius: 4px; }
         .funnel-bar {
-            height: 100%; border-radius: 6px; transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
-            display: flex; align-items: center; padding: 0 10px; min-width: fit-content;
+            height: 100%; border-radius: 4px; transition: width 0.8s ease;
+            display: flex; align-items: center; padding: 0 12px;
         }
-        .funnel-bar span { font-size: 12px; font-weight: 600; color: #fff; white-space: nowrap; }
-        .funnel-label { font-size: 12px; font-weight: 500; width: 60px; color: var(--text-muted); }
-        .funnel-count { font-size: 13px; font-weight: 700; width: 32px; text-align: right; }
+        .funnel-bar span { font-size: 13px; font-weight: 600; color: #fff; }
+        .funnel-label { font-size: 13px; font-weight: 500; width: 80px; color: var(--text-muted); }
+        .funnel-count { font-size: 14px; font-weight: 600; width: 40px; text-align: right; color: var(--text-main); }
 
-        /* Course legend */
-        .course-legend { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
-        .course-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--text-muted); }
-        .course-dot { width: 10px; height: 10px; border-radius: 50%; }
+        /* Bars (Clean SVG-like solid colors) */
+        .daily-grid { display: flex; align-items: flex-end; gap: 4px; flex-grow: 1; padding-top: 10px; }
+        .day-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; cursor: default; }
+        .day-bar {
+            width: 100%; border-radius: 2px 2px 0 0; background-color: var(--primary);
+            transition: height 0.6s ease; min-height: 2px;
+        }
+        .day-col:hover .day-bar { background-color: var(--text-main); }
+        .day-label { font-size: 11px; font-weight: 500; color: var(--text-subtle); margin-top: 8px; }
+
+        .hours-grid { display: flex; align-items: flex-end; gap: 2px; flex-grow: 1; padding-top: 10px; }
+        .hour-col { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%; position: relative; }
+        .hour-bar {
+            width: 100%; border-radius: 2px 2px 0 0; background-color: var(--border);
+            transition: height 0.6s ease, background-color 0.2s; min-height: 2px;
+        }
+        .hour-col:hover .hour-bar { background-color: var(--primary); }
+        .hour-label { font-size: 10px; font-weight: 500; color: var(--text-subtle); margin-top: 8px; }
+
+        .tooltip {
+            opacity: 0; pointer-events: none; position: absolute; bottom: calc(100% + 8px); left: 50%; transform: translateX(-50%);
+            background-color: var(--accent); color: var(--bg-base); padding: 4px 8px; border-radius: 4px;
+            font-size: 12px; font-weight: 500; white-space: nowrap; z-index: 10;
+        }
+        .day-col:hover .tooltip, .hour-col:hover .tooltip { opacity: 1; }
+
+        /* Donut */
+        .donut-wrap { display: flex; align-items: center; gap: 32px; flex-grow: 1; justify-content: center;}
+        .donut-canvas-wrap { width: 160px; height: 160px; position: relative; }
+        .donut-canvas-wrap canvas { width: 160px; height: 160px; }
+        .donut-center { position: absolute; top:50%; left:50%; transform: translate(-50%, -50%); text-align: center; }
+        .donut-val { font-size: 24px; font-weight: 600; color: var(--text-main); line-height: 1; }
+        .donut-lbl { font-size: 12px; color: var(--text-muted); }
+        
+        .course-legend { display: flex; flex-direction: column; gap: 10px; }
+        .course-item { display: flex; align-items: center; gap: 8px; font-size: 13px; color: var(--text-muted); }
+        .course-dot { width: 10px; height: 10px; border-radius: 2px; }
+        .course-item strong { color: var(--text-main); font-weight: 500; margin-left: auto; }
 
         /* Table */
         .table-wrap {
-            border: 1px solid var(--border); border-radius: 8px;
-            overflow: hidden; background: var(--bg-card); margin-bottom: 24px;
+            border-radius: 12px; background-color: var(--bg-card);
+            border: 1px solid var(--border); box-shadow: var(--shadow-sm);
+            margin-bottom: 40px; overflow: hidden;
         }
         .table-scroll { overflow-x: auto; }
-        table { width: 100%; border-collapse: collapse; min-width: 600px; }
-        thead { background: var(--bg-muted); }
+        table { width: 100%; border-collapse: collapse; min-width: 800px; text-align: left; }
+        thead { background-color: var(--bg-hover); border-bottom: 1px solid var(--border); }
         th {
-            padding: 10px 16px; font-size: 11px; font-weight: 600;
-            color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em;
-            text-align: left; border-bottom: 1px solid var(--border);
+            padding: 12px 20px; font-size: 13px; font-weight: 500; color: var(--text-muted);
         }
-        td { padding: 12px 16px; border-bottom: 1px solid var(--border); vertical-align: middle; }
+        td { padding: 14px 20px; border-bottom: 1px solid var(--border); vertical-align: middle; }
         tr:last-child td { border-bottom: none; }
-        tr:hover { background: var(--bg-muted); }
-        .td-name { font-weight: 600; color: var(--text); }
-        .td-course {
-            display: inline-block; padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 600;
-            background: var(--bg-muted); color: var(--text-muted); border: 1px solid var(--border);
-        }
-        .td-notes { font-size: 13px; color: var(--text-muted); max-width: 280px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-        .td-time { font-size: 12px; color: var(--text-subtle); text-align: right; white-space: nowrap; }
+        
+        .td-name { font-weight: 500; color: var(--text-main); font-size: 14px; }
+        .td-phone { font-family: monospace; font-size: 13px; color: var(--text-muted); }
+        .td-course { color: var(--text-main); font-size: 13px; }
+        .td-notes { font-size: 13px; color: var(--text-muted); max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+        .td-time { font-size: 13px; color: var(--text-muted); text-align: right; }
 
-        /* Badges */
+        /* Flat Badges */
         .badge {
-            display: inline-flex; align-items: center; gap: 5px;
-            padding: 3px 10px; border-radius: 9999px; font-size: 11px; font-weight: 600;
-            border: 1px solid;
+            display: inline-flex; align-items: center; gap: 6px;
+            padding: 2px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;
+            border: 1px solid; background-color: transparent;
         }
-        .badge-hot { background: var(--badge-hot-bg); color: var(--badge-hot-text); border-color: var(--badge-hot-border); }
-        .badge-warm { background: var(--badge-warm-bg); color: var(--badge-warm-text); border-color: var(--badge-warm-border); }
-        .badge-cold { background: var(--badge-cold-bg); color: var(--badge-cold-text); border-color: var(--badge-cold-border); }
-        .badge-new { background: var(--badge-new-bg); color: var(--badge-new-text); border-color: var(--badge-new-border); }
-        .badge-dot { height: 6px; width: 6px; border-radius: 50%; }
-        .badge-hot .badge-dot { background: #dc2626; }
-        .badge-warm .badge-dot { background: #d97706; }
-        .badge-cold .badge-dot { background: #2563eb; }
-        .badge-new .badge-dot { background: #71717a; }
+        .badge-hot { color: var(--hot-text); border-color: var(--hot-border); background-color: var(--hot-light); }
+        .badge-warm { color: var(--warm-text); border-color: var(--warm-border); background-color: var(--warm-light); }
+        .badge-cold { color: var(--cold-text); border-color: var(--cold-border); background-color: var(--cold-light); }
+        .badge-new { color: var(--new-text); border-color: var(--new-border); background-color: var(--new-light); }
+        
+        .badge-dot { height: 6px; width: 6px; border-radius: 50%; display: none; } /* Removed dots for cleaner look */
 
-        /* Empty */
-        .empty { padding: 60px 16px; text-align: center; }
-        .empty p { color: var(--text-muted); font-size: 13px; margin-top: 4px; }
+        /* Empty State */
+        .empty { padding: 60px 20px; text-align: center; }
+        .empty h3 { font-size: 16px; font-weight: 500; color: var(--text-main); margin-bottom: 4px; }
+        .empty p { color: var(--text-muted); font-size: 14px; }
 
-        /* Mobile cards (below 640px, hide table and show cards) */
-        .mobile-cards { display: none; }
-        @media (max-width: 640px) {
-            .table-scroll { display: none; }
-            .mobile-cards { display: block; }
-            .mobile-card {
-                padding: 14px 16px; border-bottom: 1px solid var(--border);
-            }
-            .mobile-card:last-child { border-bottom: none; }
-            .mc-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px; }
-            .mc-name { font-weight: 600; font-size: 15px; }
-            .mc-meta { display: flex; gap: 8px; align-items: center; margin-bottom: 6px; }
-            .mc-notes { font-size: 12px; color: var(--text-muted); }
-            .mc-time { font-size: 11px; color: var(--text-subtle); margin-top: 6px; }
-        }
-
-        /* Section visibility */
         .section-hidden { display: none !important; }
-
-        /* Theme toggle icon */
         .theme-icon { width: 16px; height: 16px; }
 
-        /* Peak hours bar chart (CSS) */
-        .hours-grid { display: flex; align-items: flex-end; gap: 3px; height: 160px; padding-top: 8px; }
-        .hour-col {
-            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;
+        /* Browser Demo Modal */
+        #demo-modal {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 9999; opacity: 0; pointer-events: none; transition: opacity 0.2s;
         }
-        .hour-bar {
-            width: 100%; border-radius: 3px 3px 0 0; background: var(--chart-bar);
-            transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1), background 0.2s;
-            min-height: 2px; cursor: pointer; position: relative;
+        #demo-modal.show { opacity: 1; pointer-events: auto; }
+        .demo-content {
+            background: var(--bg-card); padding: 32px; border-radius: 16px;
+            width: 400px; text-align: center; border: 1px solid var(--border);
+            box-shadow: var(--shadow-card);
         }
-        .hour-bar:hover { background: var(--chart-bar-hover); }
-        .hour-label { font-size: 9px; color: var(--text-subtle); margin-top: 4px; }
-        .hour-tooltip {
-            display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
-            background: var(--accent); color: var(--bg); padding: 3px 8px; border-radius: 4px;
-            font-size: 11px; font-weight: 600; white-space: nowrap; z-index: 10;
+        .mic-orb {
+            width: 80px; height: 80px; border-radius: 50%; background: var(--hover);
+            margin: 0 auto 24px auto; display: flex; align-items: center; justify-content: center;
+            border: 2px solid var(--border); transition: all 0.2s;
         }
-        .hour-bar:hover .hour-tooltip { display: block; }
-
-        /* Daily chart (CSS bars) */
-        .daily-grid { display: flex; align-items: flex-end; gap: 6px; height: 160px; padding-top: 8px; }
-        .day-col {
-            flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; height: 100%;
-        }
-        .day-bar {
-            width: 100%; border-radius: 4px 4px 0 0;
-            background: linear-gradient(to top, #3b82f6, #8b5cf6);
-            transition: height 0.6s cubic-bezier(0.4, 0, 0.2, 1);
-            min-height: 2px; cursor: pointer; position: relative;
-        }
-        .day-bar:hover { opacity: 0.85; }
-        .day-label { font-size: 9px; color: var(--text-subtle); margin-top: 4px; }
-        .day-tooltip {
-            display: none; position: absolute; bottom: calc(100% + 6px); left: 50%; transform: translateX(-50%);
-            background: var(--accent); color: var(--bg); padding: 3px 8px; border-radius: 4px;
-            font-size: 11px; font-weight: 600; white-space: nowrap; z-index: 10;
-        }
-        .day-bar:hover .day-tooltip { display: block; }
-
-        /* Donut container */
-        .donut-wrap { display: flex; align-items: center; gap: 24px; }
-        .donut-canvas-wrap { width: 160px; height: 160px; flex-shrink: 0; }
-        .donut-canvas-wrap canvas { width: 160px; height: 160px; }
-        @media (max-width: 480px) {
-            .donut-wrap { flex-direction: column; align-items: flex-start; }
-        }
+        .mic-orb.active { background: rgba(37, 99, 235, 0.1); border-color: var(--primary); box-shadow: 0 0 20px rgba(37, 99, 235, 0.3); animation: pulse 1.5s infinite; }
+        @keyframes pulse { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        
     </style>
+    <script src="https://cdn.jsdelivr.net/npm/livekit-client/dist/livekit-client.umd.min.js"></script>
 </head>
 
 <body>
     <nav class="navbar">
         <div class="container inner">
             <div class="nav-left">
-                <span class="dot"></span>
-                <h1 id="nav-title">Voice AI Dashboard</h1>
+                <div class="app-logo">V</div>
+                <h1>VoiceAI Leads</h1>
             </div>
             <div class="nav-right">
-                <span id="user-name" style="font-size:12px;font-weight:500"></span>
-                <span id="update-time" style="font-size:11px;color:var(--text-subtle)"></span>
-                <button class="btn" onclick="exportCSV()">Export</button>
-                <button class="btn" onclick="logout()" title="Sign out">Logout</button>
-                <button class="btn btn-icon" onclick="toggleTheme()" title="Toggle theme" id="theme-btn">
+                <span id="user-name" style="font-size:13px;font-weight:500"></span>
+                <span id="update-time" style="font-size:12px;color:var(--text-subtle); margin-right: 12px;"></span>
+                <button class="btn" onclick="exportCSV()">Export CSV</button>
+                <button class="btn" onclick="logout()">Logout</button>
+                <button class="btn btn-icon" onclick="toggleTheme()" id="theme-btn">
                     <svg class="theme-icon" id="icon-sun" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><path d="M12 1v2m0 18v2M4.22 4.22l1.42 1.42m12.72 12.72l1.42 1.42M1 12h2m18 0h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/></svg>
                     <svg class="theme-icon" id="icon-moon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2" style="display:none"><path d="M21 12.79A9 9 0 1111.21 3 7 7 0 0021 12.79z"/></svg>
                 </button>
             </div>
         </div>
-    </nav>
+    </nav>    <!-- Developer Sandbox -->
+    <div class="container" style="margin-top: 24px;">
+        <div class="stat-card" style="display: flex; align-items: center; justify-content: space-between; background: linear-gradient(to right, var(--bg-card), var(--bg-hover)); border: 1px solid var(--primary); padding: 16px 24px;">
+            <div>
+                <h3 style="font-size: 14px; margin-bottom: 4px;">🚀 Developer Sandbox</h3>
+                <p style="font-size: 12px; color: var(--text-muted);">Test out your AI agent instantly right in your browser.</p>
+            </div>
+            <div style="display: flex; gap: 12px; align-items: center;">
+                <button class="btn btn-primary" onclick="startBrowserDemo()" id="btn-browser">Start Browser Demo</button>
+            </div>
+        </div>
+    </div>
 
     <div class="container">
         <!-- Tabs -->
-        <div class="tabs">
-            <button class="tab active" id="tab-leads" onclick="switchTab('leads')">Leads</button>
-            <button class="tab" id="tab-analytics" onclick="switchTab('analytics')">Analytics</button>
+        <div class="tabs-container">
+            <div class="tabs">
+                <button class="tab active" id="tab-leads" onclick="switchTab('leads')">Inbox</button>
+                <button class="tab" id="tab-analytics" onclick="switchTab('analytics')">Analytics</button>
+            </div>
         </div>
 
-        <!-- Stats (shared) -->
+        <!-- Clean Stats Grid -->
         <div class="stats">
             <div class="stat-card">
                 <div class="stat-label">Total Leads</div>
                 <div class="stat-value" id="s-total">0</div>
+                <div class="stat-sub">All-time calls</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Today</div>
-                <div class="stat-value" id="s-today" style="color: var(--chart-accent)">0</div>
+                <div class="stat-label">Today's Active</div>
+                <div class="stat-value success" id="s-today">0</div>
+                <div class="stat-sub">Calls today</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Hot 🔥</div>
                 <div class="stat-value hot" id="s-hot">0</div>
+                <div class="stat-sub">High priority</div>
             </div>
             <div class="stat-card">
                 <div class="stat-label">Warm</div>
                 <div class="stat-value warm" id="s-warm">0</div>
+                <div class="stat-sub">Needs follow-up</div>
             </div>
             <div class="stat-card">
-                <div class="stat-label">Conversion</div>
-                <div class="stat-value" id="s-conversion" style="color: var(--chart-success)">0%</div>
-                <div class="stat-sub">Hot / Total</div>
+                <div class="stat-label">Cold</div>
+                <div class="stat-value cold" id="s-cold">0</div>
+                <div class="stat-sub">Low intent</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-label">Conversion Rate</div>
+                <div class="stat-value" id="s-conversion">0%</div>
+                <div class="stat-sub">Hot : Total ratio</div>
             </div>
         </div>
 
@@ -340,24 +347,20 @@
                         <thead>
                             <tr>
                                 <th>Status</th>
-                                <th>Name</th>
-                                <th>Phone</th>
+                                <th>Student Name</th>
+                                <th>Phone Number</th>
                                 <th>Course</th>
                                 <th>AI Summary</th>
-                                <th style="text-align:right">Time</th>
+                                <th style="text-align:right">Time Logged</th>
                             </tr>
                         </thead>
                         <tbody id="tbody"></tbody>
                     </table>
                 </div>
 
-                <!-- Mobile Cards -->
-                <div class="mobile-cards" id="mobile-cards"></div>
-
-                <!-- Empty state -->
                 <div id="empty" class="empty" style="display:none;">
-                    <p style="font-weight:600;color:var(--text)">No leads yet</p>
-                    <p>Leads from AI calls will appear here in real time.</p>
+                    <h3>Agent is listening</h3>
+                    <p>New leads from AI calls will appear here automatically.</p>
                 </div>
             </div>
         </div>
@@ -365,27 +368,31 @@
         <!-- ═══════════════ ANALYTICS SECTION ═══════════════ -->
         <div id="section-analytics" class="section-hidden">
             <div class="charts-grid">
-                <!-- Daily Leads Chart -->
+                <!-- Daily Leads -->
                 <div class="chart-card full-width">
-                    <div class="chart-title">Leads Over Time</div>
-                    <div class="chart-subtitle">Last 14 days</div>
+                    <div class="chart-title">Call Volume</div>
+                    <div class="chart-subtitle">Daily leads over the last 14 days</div>
                     <div class="daily-grid" id="daily-chart"></div>
                 </div>
 
                 <!-- Peak Hours -->
                 <div class="chart-card">
-                    <div class="chart-title">Peak Call Hours</div>
-                    <div class="chart-subtitle">When your leads call most</div>
+                    <div class="chart-title">Activity by Hour</div>
+                    <div class="chart-subtitle">When leads are calling the most</div>
                     <div class="hours-grid" id="hours-chart"></div>
                 </div>
 
                 <!-- Course Distribution -->
                 <div class="chart-card">
-                    <div class="chart-title">Course Demand</div>
-                    <div class="chart-subtitle">What students are asking about</div>
+                    <div class="chart-title">Interest Breakdown</div>
+                    <div class="chart-subtitle">Programs frequently requested</div>
                     <div class="donut-wrap">
                         <div class="donut-canvas-wrap">
                             <canvas id="donut-canvas" width="320" height="320"></canvas>
+                            <div class="donut-center">
+                                <div class="donut-val" id="donut-val">0</div>
+                                <div class="donut-lbl">Leads</div>
+                            </div>
                         </div>
                         <div class="course-legend" id="course-legend"></div>
                     </div>
@@ -393,11 +400,27 @@
 
                 <!-- Conversion Funnel -->
                 <div class="chart-card full-width">
-                    <div class="chart-title">Conversion Funnel</div>
-                    <div class="chart-subtitle">Total → Interested → Ready to Enroll</div>
+                    <div class="chart-title">Qualification Funnel</div>
+                    <div class="chart-subtitle">Funnel conversion of all calls</div>
                     <div class="funnel" id="funnel-chart"></div>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- Browser Demo Modal -->
+    <div id="demo-modal">
+        <div class="demo-content">
+            <div class="mic-orb" id="mic-orb">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color: var(--text-main);"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"></path><path d="M19 10v2a7 7 0 0 1-14 0v-2"></path><line x1="12" y1="19" x2="12" y2="23"></line><line x1="8" y1="23" x2="16" y2="23"></line></svg>
+            </div>
+            <h3 id="demo-status" style="margin-bottom: 8px;">Ready to connect</h3>
+            <p style="font-size: 13px; color: var(--text-subtle); margin-bottom: 24px;">Click connect and start talking. Ensure your microphone is allowed.</p>
+            <div style="display: flex; gap: 12px; justify-content: center;">
+                <button class="btn btn-primary" id="demo-connect-btn" onclick="toggleWebDemo()">Connect</button>
+                <button class="btn" onclick="closeDemoModal()" id="demo-close-btn">Close</button>
+            </div>
+            <audio id="remote-audio" autoplay></audio>
         </div>
     </div>
 
@@ -407,18 +430,11 @@
         let currentTab = 'leads';
         const isDark = () => document.documentElement.classList.contains('dark');
 
-        // ═══════════════════════════════════════
-        // AUTH CHECK
-        // ═══════════════════════════════════════
         const AUTH_TOKEN = localStorage.getItem('auth_token');
-        if (!AUTH_TOKEN) {
-            window.location.href = '/login';
-        }
+        if (!AUTH_TOKEN) window.location.href = '/login';
 
         const savedName = localStorage.getItem('user_name');
-        if (savedName) {
-            document.getElementById('user-name').textContent = savedName;
-        }
+        if (savedName) document.getElementById('user-name').textContent = savedName;
 
         function logout() {
             localStorage.removeItem('auth_token');
@@ -432,7 +448,6 @@
             document.getElementById('icon-sun').style.display = isDark() ? 'none' : 'block';
             document.getElementById('icon-moon').style.display = isDark() ? 'block' : 'none';
             localStorage.setItem('theme', isDark() ? 'dark' : 'light');
-            // Re-render charts on theme change
             if (analyticsData) renderAnalytics(analyticsData);
         }
 
@@ -442,9 +457,6 @@
             document.getElementById('icon-moon').style.display = 'block';
         }
 
-        // ═══════════════════════════════════════
-        // TAB SWITCHING
-        // ═══════════════════════════════════════
         function switchTab(tab) {
             currentTab = tab;
             document.getElementById('tab-leads').classList.toggle('active', tab === 'leads');
@@ -454,13 +466,10 @@
             if (tab === 'analytics' && !analyticsData) fetchAnalytics();
         }
 
-        // ═══════════════════════════════════════
-        // HELPERS
-        // ═══════════════════════════════════════
         function badge(status) {
             const map = { hot: 'Hot', warm: 'Warm', cold: 'Cold', new: 'New' };
             const cls = `badge badge-${status || 'new'}`;
-            return `<span class="${cls}"><span class="badge-dot"></span>${map[status] || 'New'}</span>`;
+            return `<span class="${cls}">${map[status] || 'New'}</span>`;
         }
 
         function timeAgo(dateStr) {
@@ -468,197 +477,127 @@
             return d.toLocaleDateString([], { month: 'short', day: 'numeric' }) + ' · ' + d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         }
 
-        function getCSS(varName) {
-            return getComputedStyle(document.documentElement).getPropertyValue(varName).trim();
-        }
-
-        // ═══════════════════════════════════════
-        // FETCH LEADS
-        // ═══════════════════════════════════════
         async function fetchLeads() {
             try {
-                const res = await fetch('/api/leads', {
-                    headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` }
-                });
-
-                if (res.status === 401) {
-                    logout();
-                    return;
-                }
-
+                const res = await fetch('/api/leads', { headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` } });
+                if (res.status === 401) return logout();
                 leads = await res.json();
                 renderLeads();
-                document.getElementById('update-time').textContent = new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
+                document.getElementById('update-time').textContent = "Updated " + new Date().toLocaleTimeString([], {hour:'2-digit', minute:'2-digit'});
             } catch(e) { console.error(e); }
         }
 
-        // ═══════════════════════════════════════
-        // FETCH ANALYTICS
-        // ═══════════════════════════════════════
         async function fetchAnalytics() {
             try {
-                const res = await fetch('/api/analytics', {
-                    headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` }
-                });
-                if (res.status === 401) { logout(); return; }
+                const res = await fetch('/api/analytics', { headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` } });
+                if (res.status === 401) return logout();
                 analyticsData = await res.json();
                 renderAnalytics(analyticsData);
             } catch(e) { console.error(e); }
         }
 
-        // ═══════════════════════════════════════
-        // RENDER LEADS TABLE
-        // ═══════════════════════════════════════
         function renderLeads() {
-            // Stats
             document.getElementById('s-total').textContent = leads.length;
             const todayStr = new Date().toISOString().slice(0, 10);
-            const todayCount = leads.filter(l => l.created_at?.slice(0, 10) === todayStr).length;
-            document.getElementById('s-today').textContent = todayCount;
-            document.getElementById('s-hot').textContent = leads.filter(l => l.status === 'hot').length;
+            document.getElementById('s-today').textContent = leads.filter(l => l.created_at?.slice(0, 10) === todayStr).length;
+            
+            const hotC = leads.filter(l => l.status === 'hot').length;
+            document.getElementById('s-hot').textContent = hotC;
             document.getElementById('s-warm').textContent = leads.filter(l => l.status === 'warm').length;
-            const hotCount = leads.filter(l => l.status === 'hot').length;
-            document.getElementById('s-conversion').textContent = leads.length > 0 ? Math.round((hotCount / leads.length) * 100) + '%' : '0%';
+            document.getElementById('s-cold').textContent = leads.filter(l => l.status === 'cold' || l.status === 'new').length;
+            
+            document.getElementById('s-conversion').textContent = leads.length > 0 ? Math.round((hotC / leads.length) * 100) + '%' : '0%';
 
             if (leads.length === 0) {
                 document.getElementById('empty').style.display = 'block';
                 document.getElementById('tbody').innerHTML = '';
-                document.getElementById('mobile-cards').innerHTML = '';
                 return;
             }
             document.getElementById('empty').style.display = 'none';
 
-            // Desktop table
             document.getElementById('tbody').innerHTML = leads.map(l => `
                 <tr>
                     <td>${badge(l.status)}</td>
                     <td class="td-name">${l.name || 'Anonymous'}</td>
                     <td class="td-phone">${l.phone_number || '—'}</td>
-                    <td><span class="td-course">${l.course || '—'}</span></td>
+                    <td class="td-course">${l.course || '—'}</td>
                     <td class="td-notes" title="${l.notes || ''}">${l.notes || '—'}</td>
                     <td class="td-time">${timeAgo(l.created_at)}</td>
                 </tr>`).join('');
-
-            // Mobile cards
-            document.getElementById('mobile-cards').innerHTML = leads.map(l => `
-                <div class="mobile-card">
-                    <div class="mc-top">
-                        <span class="mc-name">${l.name || 'Anonymous'}</span>
-                        ${badge(l.status)}
-                    </div>
-                    <div class="mc-meta">
-                        <span class="mc-phone">${l.phone_number || 'No Number'}</span>
-                        <span class="td-course">${l.course || '—'}</span>
-                    </div>
-                    ${l.notes ? `<div class="mc-notes">${l.notes}</div>` : ''}
-                    <div class="mc-time">${timeAgo(l.created_at)}</div>
-                </div>`).join('');
         }
 
-        // ═══════════════════════════════════════
-        // RENDER ANALYTICS
-        // ═══════════════════════════════════════
         function renderAnalytics(data) {
             renderDailyChart(data.dailyLeads);
             renderHoursChart(data.hourlyDistribution);
             renderDonutChart(data.courseBreakdown);
             renderFunnel(data.funnel);
-
-            // Update stats from analytics data too
+            
             document.getElementById('s-today').textContent = data.todayCount;
             document.getElementById('s-conversion').textContent = data.conversionRate + '%';
         }
 
-        // --- Daily Leads Bar Chart ---
         function renderDailyChart(dailyLeads) {
             const container = document.getElementById('daily-chart');
             const maxVal = Math.max(...dailyLeads.map(d => d.count), 1);
-
             container.innerHTML = dailyLeads.map(d => {
                 const pct = (d.count / maxVal) * 100;
-                const dateObj = new Date(d.date + 'T00:00:00');
-                const dayLabel = dateObj.toLocaleDateString([], { month: 'short', day: 'numeric' });
-                return `
-                    <div class="day-col">
-                        <div class="day-bar" style="height: ${Math.max(pct, 1.5)}%">
-                            <div class="day-tooltip">${d.count} leads</div>
-                        </div>
-                        <div class="day-label">${dayLabel}</div>
-                    </div>`;
+                const dObj = new Date(d.date + 'T00:00:00');
+                return `<div class="day-col">
+                    <div class="day-bar" style="height: ${Math.max(pct, 2)}%">
+                        <div class="tooltip">${d.count} calls</div>
+                    </div>
+                    <div class="day-label">${dObj.toLocaleDateString([], { month: 'short', day: 'numeric' })}</div>
+                </div>`;
             }).join('');
         }
 
-        // --- Hourly Distribution Chart ---
         function renderHoursChart(hourlyData) {
             const container = document.getElementById('hours-chart');
             const maxVal = Math.max(...hourlyData.map(h => h.count), 1);
-            // Show only hours 6am-11pm for clarity
             const visibleHours = hourlyData.filter(h => h.hour >= 6 && h.hour <= 23);
-
             container.innerHTML = visibleHours.map(h => {
                 const pct = (h.count / maxVal) * 100;
                 const label = h.hour === 0 ? '12a' : h.hour < 12 ? h.hour + 'a' : h.hour === 12 ? '12p' : (h.hour - 12) + 'p';
-                return `
-                    <div class="hour-col">
-                        <div class="hour-bar" style="height: ${Math.max(pct, 1.5)}%">
-                            <div class="hour-tooltip">${h.count} calls at ${label}</div>
-                        </div>
-                        <div class="hour-label">${label}</div>
-                    </div>`;
+                return `<div class="hour-col">
+                    <div class="hour-bar" style="height: ${Math.max(pct, 2)}%">
+                        <div class="tooltip">${h.count} calls</div>
+                    </div>
+                    <div class="hour-label">${label}</div>
+                </div>`;
             }).join('');
         }
 
-        // --- Donut Chart (Canvas) ---
-        const DONUT_COLORS = ['#3b82f6', '#8b5cf6', '#f59e0b', '#22c55e', '#ef4444', '#ec4899', '#14b8a6', '#f97316'];
+        // Clean professional colors
+        const DONUT_COLORS = ['#2563eb', '#0ea5e9', '#6366f1', '#8b5cf6', '#d946ef', '#f43f5e', '#f59e0b'];
 
         function renderDonutChart(courseData) {
             const canvas = document.getElementById('donut-canvas');
             const ctx = canvas.getContext('2d');
             const W = canvas.width, H = canvas.height;
             const cx = W / 2, cy = H / 2;
-            const outerR = Math.min(W, H) / 2 - 10;
-            const innerR = outerR * 0.6;
-
+            const outerR = Math.min(W, H) / 2 - 4;
+            const innerR = outerR * 0.65;
             ctx.clearRect(0, 0, W, H);
 
-            if (!courseData || courseData.length === 0) {
-                ctx.fillStyle = getCSS('--text-subtle');
-                ctx.font = '14px Inter, sans-serif';
-                ctx.textAlign = 'center';
-                ctx.fillText('No data yet', cx, cy);
-                return;
-            }
+            if (!courseData || courseData.length === 0) return;
 
             const total = courseData.reduce((s, c) => s + c.count, 0);
             let startAngle = -Math.PI / 2;
 
             courseData.forEach((item, i) => {
                 const sliceAngle = (item.count / total) * Math.PI * 2;
-                const color = DONUT_COLORS[i % DONUT_COLORS.length];
-
                 ctx.beginPath();
                 ctx.arc(cx, cy, outerR, startAngle, startAngle + sliceAngle);
                 ctx.arc(cx, cy, innerR, startAngle + sliceAngle, startAngle, true);
                 ctx.closePath();
-                ctx.fillStyle = color;
+                ctx.fillStyle = DONUT_COLORS[i % DONUT_COLORS.length];
                 ctx.fill();
-
                 startAngle += sliceAngle;
             });
+            
+            document.getElementById('donut-val').textContent = total;
 
-            // Center text
-            ctx.fillStyle = getCSS('--text');
-            ctx.font = 'bold 22px Inter, sans-serif';
-            ctx.textAlign = 'center';
-            ctx.textBaseline = 'middle';
-            ctx.fillText(total.toString(), cx, cy - 8);
-            ctx.fillStyle = getCSS('--text-muted');
-            ctx.font = '11px Inter, sans-serif';
-            ctx.fillText('total', cx, cy + 12);
-
-            // Legend
-            const legend = document.getElementById('course-legend');
-            legend.innerHTML = courseData.map((item, i) => {
+            document.getElementById('course-legend').innerHTML = courseData.map((item, i) => {
                 const color = DONUT_COLORS[i % DONUT_COLORS.length];
                 const pct = Math.round((item.count / total) * 100);
                 return `<div class="course-item">
@@ -668,26 +607,23 @@
             }).join('');
         }
 
-        // --- Funnel Chart ---
         function renderFunnel(funnel) {
             const container = document.getElementById('funnel-chart');
-            if (!funnel || funnel.total === 0) {
-                container.innerHTML = '<div style="text-align:center;padding:20px;color:var(--text-subtle);font-size:13px">No leads to show funnel</div>';
-                return;
-            }
+            if (!funnel || funnel.total === 0) return;
             const maxVal = funnel.total;
-
+            
+            // Clean flat colors for funnel
             const steps = [
-                { label: 'Total', count: funnel.total, color: '#3b82f6', pct: 100 },
-                { label: 'Warm+', count: funnel.warm, color: '#f59e0b', pct: Math.round((funnel.warm / maxVal) * 100) },
-                { label: 'Hot 🔥', count: funnel.hot, color: '#ef4444', pct: Math.round((funnel.hot / maxVal) * 100) },
+                { label: 'All Calls', count: funnel.total, color: '#71717a', pct: 100 },
+                { label: 'Cold', count: funnel.cold, color: '#0284c7', pct: Math.round((funnel.cold / maxVal) * 100) || 0 },
+                { label: 'Warm', count: funnel.warm, color: '#d97706', pct: Math.round((funnel.warm / maxVal) * 100) || 0 },
+                { label: 'Hot 🔥', count: funnel.hot, color: '#dc2626', pct: Math.round((funnel.hot / maxVal) * 100) || 0 },
             ];
-
             container.innerHTML = steps.map(s => `
                 <div class="funnel-step">
                     <div class="funnel-label">${s.label}</div>
                     <div class="funnel-bar-wrap">
-                        <div class="funnel-bar" style="width: ${Math.max(s.pct, 4)}%; background: ${s.color}">
+                        <div class="funnel-bar" style="width: ${Math.max(s.pct, 2)}%; background-color: ${s.color}">
                             <span>${s.pct}%</span>
                         </div>
                     </div>
@@ -696,31 +632,126 @@
             `).join('');
         }
 
-        // ═══════════════════════════════════════
-        // CSV EXPORT
-        // ═══════════════════════════════════════
         function exportCSV() {
-            if (!leads.length) return alert('No leads.');
-            const esc = (v) => `"${String(v || '').replace(/"/g, '""')}"`;
-            const headers = ['Name','Phone','Course','Status','Notes','Date'];
-            const rows = leads.map(l => [
-                esc(l.name), esc(l.phone_number), esc(l.course), esc(l.status),
-                esc(l.notes), esc(new Date(l.created_at).toLocaleString())
-            ].join(','));
-            const csv = '\uFEFF' + [headers.join(','), ...rows].join('\r\n');
+            if (!leads.length) return alert('No leads to export.');
+            const esc = v => `"${String(v || '').replace(/"/g, '""')}"`;
+            const header = ['Name','Phone','Course','Status','Notes','Date'];
+            const rows = leads.map(l => [esc(l.name), esc(l.phone_number), esc(l.course), esc(l.status), esc(l.notes), esc(new Date(l.created_at).toLocaleString())].join(','));
             const a = document.createElement('a');
-            a.href = URL.createObjectURL(new Blob([csv], {type:'text/csv;charset=utf-8'}));
-            a.download = `leads_${new Date().toISOString().slice(0,10)}.csv`;
+            a.href = URL.createObjectURL(new Blob(['\uFEFF' + [header.join(','), ...rows].join('\r\n')], {type:'text/csv'}));
+            a.download = `voice_ai_leads_${new Date().toISOString().slice(0,10)}.csv`;
             a.click();
         }
 
-        // ═══════════════════════════════════════
-        // INIT
-        // ═══════════════════════════════════════
+        // --- BROWSER DEMO LOGIC ---
+        let room = null;
+
+        function startBrowserDemo() {
+            document.getElementById('demo-modal').classList.add('show');
+        }
+
+        function closeDemoModal() {
+            if (room) {
+                room.disconnect();
+                room = null;
+            }
+            document.getElementById('demo-modal').classList.remove('show');
+            document.getElementById('mic-orb').classList.remove('active');
+            document.getElementById('demo-status').textContent = 'Ready to connect';
+            document.getElementById('demo-connect-btn').textContent = 'Connect';
+        }
+
+        async function toggleWebDemo() {
+            if (room && room.state === 'connected') {
+                room.disconnect();
+                return;
+            }
+
+            const btn = document.getElementById('demo-connect-btn');
+            const status = document.getElementById('demo-status');
+            const orb = document.getElementById('mic-orb');
+
+            btn.disabled = true;
+            status.textContent = 'Acquiring token...';
+
+            try {
+                const res = await fetch('/api/demo/token', {
+                    headers: { 'Authorization': `Bearer ${AUTH_TOKEN}` }
+                });
+                const data = await res.json();
+                
+                if (!data.success) throw new Error(data.error);
+
+                status.textContent = 'Connecting to room...';
+                
+                room = new LivekitClient.Room({
+                    adaptiveStream: true,
+                    dynacast: true,
+                });
+
+                room.on(LivekitClient.RoomEvent.ParticipantConnected, () => {
+                    status.textContent = 'Agent Connected! Speak now.';
+                    orb.classList.add('active');
+                    btn.textContent = 'Disconnect';
+                    btn.disabled = false;
+                });
+
+                room.on(LivekitClient.RoomEvent.TrackSubscribed, (track, publication, participant) => {
+                    if (track.kind === LivekitClient.Track.Kind.Audio) {
+                        const audioElement = document.getElementById('remote-audio');
+                        if (audioElement) {
+                            track.attach(audioElement);
+                        }
+                    }
+                });
+
+                room.on(LivekitClient.RoomEvent.TrackUnsubscribed, (track) => {
+                    if (track.kind === LivekitClient.Track.Kind.Audio) {
+                        const audioElement = document.getElementById('remote-audio');
+                        if (audioElement) {
+                            track.detach(audioElement);
+                        }
+                    }
+                });
+
+                room.on(LivekitClient.RoomEvent.Disconnected, () => {
+                    status.textContent = 'Disconnected';
+                    orb.classList.remove('active');
+                    btn.textContent = 'Connect';
+                    btn.disabled = false;
+                    const audioElement = document.getElementById('remote-audio');
+                    if (audioElement) {
+                        audioElement.pause();
+                        audioElement.srcObject = null;
+                    }
+                });
+
+                await room.connect(data.url, data.token);
+                
+                // Publish local mic
+                await room.localParticipant.setMicrophoneEnabled(true);
+                
+                // If agent is already there
+                if (room.remoteParticipants && room.remoteParticipants.size > 0) {
+                    status.textContent = 'Agent Connected! Speak now.';
+                    orb.classList.add('active');
+                    btn.textContent = 'Disconnect';
+                    btn.disabled = false;
+                } else {
+                    status.textContent = 'Waiting for agent...';
+                }
+
+            } catch (e) {
+                status.textContent = 'Error: ' + e.message;
+                btn.disabled = false;
+            }
+        }
+
         fetchLeads();
+
         fetchAnalytics();
-        setInterval(fetchLeads, 5000);
-        setInterval(fetchAnalytics, 30000); // Refresh analytics every 30s
+        setInterval(fetchLeads, 10000); // 10s polling is gentler on UI
+        setInterval(fetchAnalytics, 30000);
     </script>
 </body>
 </html>

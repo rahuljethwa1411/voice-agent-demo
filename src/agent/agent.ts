@@ -54,7 +54,19 @@ export default defineAgent({
       const vad = await silero.VAD.load();
       
       // Get the dialed number (The Twilio coaching number the student called)
-      const dialedNumber = ctx.job.participant?.attributes?.['sip.to'] || '+919999999999';
+      let dialedNumber = ctx.job.participant?.attributes?.['sip.to'];
+      
+      const roomName = ctx.room.name;
+      if (roomName && roomName.startsWith('web-demo-')) {
+          const match = roomName.match(/web-demo-(\d+)-/);
+          if (match) {
+              dialedNumber = '+' + match[1];
+          }
+      }
+      
+      if (!dialedNumber) {
+          dialedNumber = '+919999999999';
+      }
       
       // Get the student's phone number (The caller's real phone number)
       let callerId = ctx.job.participant?.attributes?.['sip.from'] || ctx.job.participant?.identity || 'Anonymous';
@@ -84,7 +96,7 @@ export default defineAgent({
           Ask for the caller's name and message, and tell them an agent will call them back.
         `;
         tools = getTools(supabase, '79ec46f9-611f-457e-b88c-149226960520', callerId); // Use admin ID for fallback
-        greeting = "Hello! I am sorry, but we are experiencing a temporary technical issue. How can I help you by taking a message?";
+        greeting = "Namaste! Main aapki kya sahayata kar sakti hoon?";
       } else {
         console.log(`✅ Loaded brain for: ${client.company_name}`);
         instructions = client.system_prompt;
@@ -139,10 +151,17 @@ export default defineAgent({
       console.log("🔊 Starting audio session...");
       await session.start({ room: ctx.room, agent });
 
-      const handle = session.say(greeting, { allowInterruptions: true });
+      session.say(greeting, { allowInterruptions: true });
+      console.log("✅ Greeting queued for playback.");
 
-      await handle.waitForPlayout();
-      console.log("✅ Greeting playback finished.");
+      // Keep the agent alive — wait for the session to close naturally
+      // (when the participant disconnects or hangs up)
+      await new Promise<void>((resolve) => {
+        session.on('close', () => resolve());
+        // Safety timeout: 10 minutes max per session
+        setTimeout(() => resolve(), 10 * 60 * 1000);
+      });
+      console.log("📴 Session ended.");
     } catch (error) {
       console.error('Fatal error in agent session:', error);
     }

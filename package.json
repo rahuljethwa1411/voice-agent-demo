@@ -7,6 +7,7 @@
     "dev": "tsx src/agent/agent.ts dev",
     "dashboard": "tsx src/dashboard/main.ts",
     "voice": "tsx src/agent/agent.ts dev",
+    "voice:prod": "tsx src/agent/agent.ts start",
     "start": "npm run dashboard"
   },
   "dependencies": {
@@ -28,6 +29,7 @@
     "livekit-server-sdk": "^2.15.1",
     "onnxruntime-node": "^1.24.3",
     "tsx": "^4.19.1",
+    "twilio": "^6.0.0",
     "zod": "^4.3.6"
   },
   "devDependencies": {

@@ -306,6 +306,56 @@ app.get('/api/analytics', requireAuth, async (req: AuthRequest, res: Response) =
 });
 
 // ═══════════════════════════════════════════════════════
+// DEMO SANDBOX API (Optional, no auth needed to test)
+// ═══════════════════════════════════════════════════════════
+
+app.get('/api/demo/token', requireAuth, async (req: AuthRequest, res: Response) => {
+  try {
+    const user = req.user!;
+    const { data: client } = await supabase
+      .from('clients')
+      .select('phone_number')
+      .eq('owner_id', user.id)
+      .single();
+
+    const userPhone = client?.phone_number ? client.phone_number.replace('+', '') : '9999999999';
+    
+    // Add the "web-demo-" prefix so agent.ts knows to use the mock Twilio parsing
+    const roomName = `web-demo-${userPhone}-${Math.floor(Math.random() * 10000)}`;
+    const participantName = `guest-${Math.floor(Math.random() * 10000)}`;
+    
+    const apiKey = process.env.LIVEKIT_API_KEY;
+    const apiSecret = process.env.LIVEKIT_API_SECRET;
+    const wssUrl = process.env.LIVEKIT_URL;
+
+    if (!apiKey || !apiSecret || !wssUrl) {
+      return res.status(500).json({ success: false, error: 'LiveKit credentials missing' });
+    }
+
+    const { AccessToken, AgentDispatchClient } = require('livekit-server-sdk');
+
+    const at = new AccessToken(apiKey, apiSecret, {
+      identity: participantName,
+      name: participantName,
+    });
+    at.addGrant({ roomJoin: true, room: roomName, canPublish: true, canSubscribe: true });
+    
+    const token = await at.toJwt();
+    
+    // EXPLICITLY dispatch an agent to this room so the per-job worker joins
+    const httpUrl = wssUrl.replace('wss://', 'https://').replace('ws://', 'http://');
+    const dispatchClient = new AgentDispatchClient(httpUrl, apiKey, apiSecret);
+    await dispatchClient.createDispatch(roomName, '');
+
+    res.json({ success: true, url: wssUrl, token });
+  } catch (error: any) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+
+
+// ═══════════════════════════════════════════════════════
 // STATIC FILES & ROUTES
 // ═══════════════════════════════════════════════════════════
 
