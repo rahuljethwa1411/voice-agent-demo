@@ -238,6 +238,74 @@ app.get('/api/leads', requireAuth, async (req: AuthRequest, res: Response) => {
 });
 
 // ═══════════════════════════════════════════════════════
+// ANALYTICS API (Protected — requires valid JWT)
+// ═══════════════════════════════════════════════════════════
+
+app.get('/api/analytics', requireAuth, async (req: AuthRequest, res: Response) => {
+  const user = req.user!;
+
+  const { data: leads, error } = await supabase
+    .from('leads')
+    .select('status, course, created_at')
+    .eq('owner_id', user.id)
+    .order('created_at', { ascending: false });
+
+  if (error) return res.status(500).json({ error: error.message });
+
+  const allLeads = leads || [];
+  const now = new Date();
+  const todayStr = now.toISOString().slice(0, 10);
+
+  // --- Daily Leads (last 14 days) ---
+  const dailyMap: Record<string, number> = {};
+  for (let i = 13; i >= 0; i--) {
+    const d = new Date(now);
+    d.setDate(d.getDate() - i);
+    dailyMap[d.toISOString().slice(0, 10)] = 0;
+  }
+  allLeads.forEach(l => {
+    const day = l.created_at?.slice(0, 10);
+    if (day && day in dailyMap) dailyMap[day]++;
+  });
+  const dailyLeads = Object.entries(dailyMap).map(([date, count]) => ({ date, count }));
+
+  // --- Hourly Distribution ---
+  const hourly = new Array(24).fill(0);
+  allLeads.forEach(l => {
+    if (l.created_at) {
+      const h = new Date(l.created_at).getHours();
+      hourly[h]++;
+    }
+  });
+  const hourlyDistribution = hourly.map((count, hour) => ({ hour, count }));
+
+  // --- Course Breakdown ---
+  const courseMap: Record<string, number> = {};
+  allLeads.forEach(l => {
+    const c = l.course || 'Other';
+    courseMap[c] = (courseMap[c] || 0) + 1;
+  });
+  const courseBreakdown = Object.entries(courseMap)
+    .map(([course, count]) => ({ course, count }))
+    .sort((a, b) => b.count - a.count);
+
+  // --- Funnel ---
+  const total = allLeads.length;
+  const warm = allLeads.filter(l => l.status === 'warm' || l.status === 'hot').length;
+  const hot = allLeads.filter(l => l.status === 'hot').length;
+  const funnel = { total, warm, hot };
+
+  // --- Today Count ---
+  const todayCount = allLeads.filter(l => l.created_at?.slice(0, 10) === todayStr).length;
+
+  // --- Conversion Rate ---
+  const conversionRate = total > 0 ? Math.round((hot / total) * 100) : 0;
+
+  console.log(`API /analytics called for user: ${user.id} | ${total} leads`);
+  res.json({ dailyLeads, hourlyDistribution, courseBreakdown, funnel, todayCount, conversionRate });
+});
+
+// ═══════════════════════════════════════════════════════
 // STATIC FILES & ROUTES
 // ═══════════════════════════════════════════════════════════
 
