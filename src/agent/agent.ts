@@ -115,7 +115,7 @@ export default defineAgent({
         vad,
         turnHandling: {
           turnDetection: 'vad',
-          endpointing: { minDelay: 2000 },
+          endpointing: { minDelay: 800 },  // 800ms feels natural (2000ms was sluggish)
         },
       });
 
